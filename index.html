@@ -2,78 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Band 9 Academic Mastery Engine</title>
+    <title>Band 9 Transformation Library</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
-        .app-container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .input-group { margin: 20px 0; padding: 15px; border-left: 6px solid #2980b9; background: #fdfdfd; position: relative; }
-        .anchor-text { font-size: 1em; color: #2c3e50; font-weight: 600; background: #ebf5fb; padding: 12px; display: block; border: 1px solid #d6eaf8; margin-bottom: 8px; }
-        textarea { width: 100%; height: 60px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; }
-        .voice-btn { cursor: pointer; background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-bottom: 5px; }
-        .controls { display: flex; gap: 10px; margin-top: 20px; }
-        button { padding: 12px 20px; cursor: pointer; background: #27ae60; color: white; border: none; font-size: 1em; }
-        #audit-box { margin-top: 25px; padding: 20px; border: 1px solid #bdc3c7; display: none; background: #f9f9f9; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; line-height: 1.6; }
+        .app-container { max-width: 850px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .stage { margin-bottom: 20px; padding: 15px; border-radius: 8px; border-left: 6px solid #27ae60; background: #fdfdfd; border: 1px solid #eee; }
+        .basic { color: #c0392b; font-weight: bold; background: #fff5f5; padding: 3px 6px; border-radius: 4px; }
+        .advanced { color: #27ae60; font-weight: bold; background: #e8f5e9; padding: 3px 6px; border-radius: 4px; }
+        h3 { color: #2c3e50; margin: 0 0 10px 0; font-size: 1.1em; }
+        .explanation { font-size: 0.85em; color: #666; font-style: italic; margin-top: 5px; }
+        .nav-btn { padding: 12px 25px; cursor: pointer; background: #2980b9; color: white; border: none; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h2 id="topic-title">Loading...</h2>
-    <div id="drill-area">
-        <div class="input-group"><label>Scene (Nominalization):</label><span class="anchor-text" id="p-sit"></span><button class="voice-btn" onclick="startDictation('sit')">🎤 Dictate</button><textarea id="sit"></textarea></div>
-        <div class="input-group"><label>Challenge (Complex Conjunction):</label><span class="anchor-text" id="p-task"></span><button class="voice-btn" onclick="startDictation('task')">🎤 Dictate</button><textarea id="task"></textarea></div>
-        <div class="input-group"><label>Action (Inversion/Progression):</label><span class="anchor-text" id="p-act"></span><button class="voice-btn" onclick="startDictation('act')">🎤 Dictate</button><textarea id="act"></textarea></div>
-        <div class="input-group"><label>Impact (Academic Hedging):</label><span class="anchor-text" id="p-res"></span><button class="voice-btn" onclick="startDictation('res')">🎤 Dictate</button><textarea id="res"></textarea></div>
+    <h2 id="topic-header">Topic 1: Hometown</h2>
+    <div id="content-area"></div>
+    <div style="margin-top: 20px; text-align: center;">
+        <button class="nav-btn" onclick="nextTopic()">Next Topic ➔</button>
     </div>
-    
-    <div class="controls">
-        <button onclick="evaluateDrill()">Submit & Audit</button>
-        <button onclick="nextLevel()" style="background:#2c3e50;">Next Topic ➔</button>
-    </div>
-    <div id="audit-box"></div>
 </div>
 
 <script>
-const topics = [
-    { t: "1. Hometown", s: "The longitudinal urbanization of my hometown reflects deep demographic shifts and spatial transformation.", ch: "Notwithstanding heritage preservation efforts, the city continues to expand rapidly.", a: "While I was residing there, never had I witnessed such accelerated developmental momentum.", r: "It would be more accurate to conclude that this fosters long-term community resilience." },
-    { t: "2. Work & Career", s: "The professional trajectory of my career emphasizes clinical excellence through longitudinal skill acquisition.", ch: "Given the multifaceted complexity of workplace dynamics, adaptability is paramount.", a: "While I was navigating my professional objectives, never had I attained such clinical depth.", r: "It would be more plausible to conclude that this focus fosters sustained career longevity." },
-    { t: "3. Studies & Education", s: "The academic pursuit of my discipline prioritizes rigorous evidence-based practice and intellectual discovery.", ch: "Considering the complexity of pedagogical frameworks, lifelong learning is essential.", a: "While I was engaging in inquiry, never had I encountered more challenging intellectual paradigms.", r: "It would be more significant to conclude that this approach fosters professional mastery." },
-    { t: "4. Technology", s: "The rapid integration of advanced digital technologies fundamentally revolutionizes contemporary workflow efficiency.", ch: "Insofar as the complexity of global connectivity is concerned, digital literacy is an indispensable requirement.", a: "While I was utilizing these tools, never had I optimized my tasks with such surgical precision.", r: "It would be more analytical to conclude that this transition fosters systemic innovation." },
-    { t: "5. Health & Fitness", s: "The prioritization of personal wellness mandates a lifestyle characterized by preventative care.", ch: "Notwithstanding the complexity of maintaining physical conditioning, consistency remains key.", a: "While I was training consistently, never had I prioritized my holistic well-being with such commitment.", r: "It would be more prudent to conclude that this lifestyle fosters sustained performance." },
-    { t: "6. Travel & Culture", s: "Cultural immersion experiences serve to significantly broaden one's global perspectives and awareness.", ch: "Given the complexity of cross-cultural communication, travel is an effective medium for learning.", a: "While I was navigating diverse environments, never had I encountered such profound cultural diversity.", r: "It would be more insightful to conclude that this fosters global empathy." },
-    { t: "7. Environment", s: "The strategic preservation of natural habitats is crucial for long-term resource optimization.", ch: "Considering the complexity of climate action, collective responsibility is the only path forward.", a: "While I was advocating for sustainable practices, never had I supported such impactful conservation efforts.", r: "It would be more substantiated to conclude that this fosters long-term viability." },
-    { t: "8. Hobbies", s: "The cultivation of creative hobbies involves complex problem-solving and continuous skill enhancement.", ch: "Reflecting on the complexity of skill development, the process is intrinsically rewarding.", a: "While I was dedicating time to this pursuit, never had I refined my capabilities with such intent.", r: "It would be more appropriate to conclude that this practice fosters personal growth." },
-    { t: "9. Future Goals", s: "The strategic formulation of long-term objectives is essential for achieving professional mobility.", ch: "Notwithstanding the complexity of career transitions, I have developed a comprehensive roadmap.", a: "While I was envisioning my future, never had I cultivated a more disciplined vision.", r: "It would be more strategic to conclude that this fosters long-term stability." },
-    { t: "10. Media & News", s: "The critical interpretation of contemporary media highlights the importance of analyzing information flows.", ch: "Given the complexity of source verification, extreme vigilance is required.", a: "While I was analyzing current events, never had I evaluated discourse with such analytical precision.", r: "It would be more objective to conclude that this fosters greater clarity." }
+const data = [
+    { t: "1. Hometown", s: ["I lived there and saw it growing.", "The longitudinal urbanization of my hometown reflects deep demographic shifts and spatial transformation."], ch: ["It is hard to keep the history.", "Notwithstanding heritage preservation efforts, the city continues to expand rapidly."], a: ["I was living there and saw changes.", "While I was residing there, never had I witnessed such accelerated developmental momentum."], r: ["It is better for the future.", "It would be more accurate to conclude that this fosters long-term community resilience."] },
+    { t: "2. Work & Career", s: ["I like my job and I learn.", "The professional trajectory of my career emphasizes clinical excellence through longitudinal skill acquisition."], ch: ["It is hard work.", "Given the multifaceted complexity of workplace dynamics, adaptability is paramount."], a: ["I was working and I saw things.", "While I was navigating my professional objectives, never had I attained such clinical depth."], r: ["It is good for my future.", "It would be more plausible to conclude that this focus fosters sustained career longevity."] },
+    { t: "3. Education", s: ["I study hard at school.", "The academic pursuit of my discipline prioritizes rigorous evidence-based practice and intellectual discovery."], ch: ["It is hard to learn everything.", "Considering the complexity of pedagogical frameworks, lifelong learning is essential."], a: ["I was studying and reading.", "While I was engaging in inquiry, never had I encountered more challenging intellectual paradigms."], r: ["It makes me smarter.", "It would be more significant to conclude that this approach fosters professional mastery."] },
+    { t: "4. Technology", s: ["I use my phone every day.", "The rapid integration of advanced digital technologies fundamentally revolutionizes contemporary workflow efficiency."], ch: ["It is hard to learn new tools.", "Insofar as the complexity of global connectivity is concerned, digital literacy is an indispensable requirement."], a: ["I was using my computer.", "While I was utilizing these tools, never had I optimized my tasks with such surgical precision."], r: ["It makes work faster.", "It would be more analytical to conclude that this transition fosters systemic innovation."] },
+    { t: "5. Health & Fitness", s: ["I exercise to stay healthy.", "The prioritization of personal wellness mandates a lifestyle characterized by preventative care."], ch: ["It is hard to be consistent.", "Notwithstanding the complexity of maintaining physical conditioning, consistency remains key."], a: ["I was training at the gym.", "While I was training consistently, never had I prioritized my holistic well-being with such commitment."], r: ["It makes me stronger.", "It would be more prudent to conclude that this lifestyle fosters sustained performance."] },
+    { t: "6. Travel & Culture", s: ["I travel to see new places.", "Cultural immersion experiences serve to significantly broaden one's global perspectives and awareness."], ch: ["It is hard to understand others.", "Given the complexity of cross-cultural communication, travel is an effective medium for learning."], a: ["I was traveling around.", "While I was navigating diverse environments, never had I encountered such profound cultural diversity."], r: ["It is a good experience.", "It would be more insightful to conclude that this fosters global empathy."] },
+    { t: "7. Environment", s: ["We must save the earth.", "The strategic preservation of natural habitats is crucial for long-term resource optimization."], ch: ["It is hard to stop pollution.", "Considering the complexity of climate action, collective responsibility is the only path forward."], a: ["I was helping the planet.", "While I was advocating for sustainable practices, never had I supported such impactful conservation efforts."], r: ["It is good for the future.", "It would be more substantiated to conclude that this fosters long-term viability."] },
+    { t: "8. Hobbies", s: ["I have fun with my hobbies.", "The cultivation of creative hobbies involves complex problem-solving and continuous skill enhancement."], ch: ["It is hard to be good at them.", "Reflecting on the complexity of skill development, the process is intrinsically rewarding."], a: ["I was practicing my hobby.", "While I was dedicating time to this pursuit, never had I refined my capabilities with such intent."], r: ["It makes me happy.", "It would be more appropriate to conclude that this practice fosters personal growth."] },
+    { t: "9. Future Goals", s: ["I plan to succeed.", "The strategic formulation of long-term objectives is essential for achieving professional mobility."], ch: ["It is hard to plan ahead.", "Notwithstanding the complexity of career transitions, I have developed a comprehensive roadmap."], a: ["I was thinking about my goals.", "While I was envisioning my future, never had I cultivated a more disciplined vision."], r: ["It is a good plan.", "It would be more strategic to conclude that this fosters long-term stability."] },
+    { t: "10. Media & News", s: ["I read news every day.", "The critical interpretation of contemporary media highlights the importance of analyzing information flows."], ch: ["It is hard to find the truth.", "Given the complexity of source verification, extreme vigilance is required."], a: ["I was watching the news.", "While I was analyzing current events, never had I evaluated discourse with such analytical precision."], r: ["It helps me know more.", "It would be more objective to conclude that this fosters greater clarity."] }
 ];
 
-let current = 0;
-function load() {
-    document.getElementById('topic-title').innerText = topics[current].t;
-    document.getElementById('p-sit').innerText = topics[current].s;
-    document.getElementById('p-task').innerText = topics[current].ch;
-    document.getElementById('p-act').innerText = topics[current].a;
-    document.getElementById('p-res').innerText = topics[current].r;
-    document.getElementById('audit-box').style.display = 'none';
+let idx = 0;
+function nextTopic() {
+    idx = (idx + 1) % data.length;
+    render();
 }
 
-function startDictation(id) {
-    const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    rec.lang = 'en-US';
-    rec.onresult = (e) => { document.getElementById(id).value = e.results[0][0].transcript; };
-    rec.start();
+function render() {
+    document.getElementById('topic-header').innerText = data[idx].t;
+    let html = "";
+    const sections = ["Scene (Nominalization)", "Challenge (Complex Conjunction)", "Action (Inversion)", "Impact (Hedging)"];
+    const keys = ['s', 'ch', 'a', 'r'];
+    keys.forEach((k, i) => {
+        html += `<div class="stage"><h3>${sections[i]}</h3>
+                 <p>Basic: <span class="basic">${data[idx][k][0]}</span></p>
+                 <p>Band 9: <span class="advanced">${data[idx][k][1]}</span></p></div>`;
+    });
+    document.getElementById('content-area').innerHTML = html;
 }
-
-function evaluateDrill() {
-    const full = `${topics[current].s} ${topics[current].ch} ${topics[current].a} ${topics[current].r}`;
-    const box = document.getElementById('audit-box');
-    box.innerHTML = `<h3>Audit Report</h3><p>${full}</p>
-                     <button onclick="window.speechSynthesis.speak(new SpeechSynthesisUtterance('${full.replace(/'/g, "\\'")}'))">🔊 Listen</button>`;
-    box.style.display = 'block';
-}
-
-function nextLevel() { current = (current + 1) % topics.length; load(); }
-load();
+render();
 </script>
 </body>
 </html>
