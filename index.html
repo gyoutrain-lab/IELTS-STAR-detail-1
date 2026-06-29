@@ -2,84 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Band 9 Drill: High-Density Cognitive Anchors</title>
+    <title>Band 9 Academic Mastery Engine</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
-        .app-container { max-width: 850px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .input-group { margin: 20px 0; padding: 15px; background: #fdfdfd; border-left: 6px solid #2980b9; }
-        .anchor-text { font-size: 0.95em; color: #2c3e50; font-weight: 600; background: #dcdde1; padding: 10px; display: block; margin-bottom: 8px; border-radius: 4px; }
-        textarea { width: 100%; height: 70px; border: 1px solid #bdc3c7; padding: 12px; font-size: 1em; }
-        button { padding: 12px 20px; cursor: pointer; background: #2980b9; color: white; border: none; margin-top: 10px; font-weight: bold; }
-        .mic-btn { background: #c0392b; }
-        #review { margin-top: 25px; padding: 20px; border: 1px solid #bdc3c7; display: none; background: #f1f2f6; }
+        .app-container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .input-group { margin: 20px 0; padding: 15px; border-left: 6px solid #2980b9; background: #fdfdfd; position: relative; }
+        .anchor-text { font-size: 1em; color: #2c3e50; font-weight: 600; background: #ebf5fb; padding: 12px; display: block; border: 1px solid #d6eaf8; margin-bottom: 8px; }
+        textarea { width: 100%; height: 60px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; }
+        .voice-btn { cursor: pointer; background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-bottom: 5px; }
+        .controls { display: flex; gap: 10px; margin-top: 20px; }
+        button { padding: 12px 20px; cursor: pointer; background: #27ae60; color: white; border: none; font-size: 1em; }
+        #audit-box { margin-top: 25px; padding: 20px; border: 1px solid #bdc3c7; display: none; background: #f9f9f9; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h2 id="level-title">Level 1: Hometown</h2>
+    <h2 id="topic-title">Loading...</h2>
     <div id="drill-area">
-        <div class="input-group">
-            <label>Scene (Nominalization):</label>
-            <span class="anchor-text" id="p-sit"></span>
-            <textarea id="sit"></textarea>
-            <button class="mic-btn" onclick="startDictation('sit')">🎤 Record Segment</button>
-        </div>
-        <div class="input-group">
-            <label>Challenge (Complex Conjunction):</label>
-            <span class="anchor-text" id="p-task"></span>
-            <textarea id="task"></textarea>
-            <button class="mic-btn" onclick="startDictation('task')">🎤 Record Segment</button>
-        </div>
-        <div class="input-group">
-            <label>Action (Past Progressive + Inversion):</label>
-            <span class="anchor-text" id="p-act"></span>
-            <textarea id="act"></textarea>
-            <button class="mic-btn" onclick="startDictation('act')">🎤 Record Segment</button>
-        </div>
-        <div class="input-group">
-            <label>Impact (Academic Hedging):</label>
-            <span class="anchor-text" id="p-res"></span>
-            <textarea id="res"></textarea>
-            <button class="mic-btn" onclick="startDictation('res')">🎤 Record Segment</button>
-        </div>
+        <div class="input-group"><label>Scene (Nominalization):</label><span class="anchor-text" id="p-sit"></span><button class="voice-btn" onclick="startDictation('sit')">🎤 Dictate</button><textarea id="sit"></textarea></div>
+        <div class="input-group"><label>Challenge (Complex Conjunction):</label><span class="anchor-text" id="p-task"></span><button class="voice-btn" onclick="startDictation('task')">🎤 Dictate</button><textarea id="task"></textarea></div>
+        <div class="input-group"><label>Action (Inversion/Progression):</label><span class="anchor-text" id="p-act"></span><button class="voice-btn" onclick="startDictation('act')">🎤 Dictate</button><textarea id="act"></textarea></div>
+        <div class="input-group"><label>Impact (Academic Hedging):</label><span class="anchor-text" id="p-res"></span><button class="voice-btn" onclick="startDictation('res')">🎤 Dictate</button><textarea id="res"></textarea></div>
     </div>
-    <button onclick="evaluateDrill()">Submit & Generate Audit</button>
-    <button onclick="nextLevel()">Next Competency</button>
-    <div id="review"></div>
+    
+    <div class="controls">
+        <button onclick="evaluateDrill()">Submit & Audit</button>
+        <button onclick="nextLevel()" style="background:#2c3e50;">Next Topic ➔</button>
+    </div>
+    <div id="audit-box"></div>
 </div>
 
 <script>
-    const levels = [
-        { t: "Hometown", s: "The longitudinal urbanization of my hometown reflects deep demographic shifts and systemic infrastructural expansion...", t: "Notwithstanding the traditional heritage preservation efforts and localized economic pressures...", a: "While I was experiencing the local transition, never had I witnessed such accelerated developmental momentum...", r: "It would be more accurate to conclude that this fosters long-term community resilience and sustainable prosperity...", full: "The longitudinal urbanization of my hometown reflects deep demographic shifts and systemic infrastructural expansion. Notwithstanding the traditional heritage preservation efforts and localized economic pressures, the urban environment is evolving rapidly. While I was experiencing the local transition, never had I witnessed such accelerated developmental momentum. It would be more accurate to conclude that this fosters long-term community resilience and sustainable prosperity." },
-        { t: "Work/Career", s: "The professional trajectory of my career emphasizes clinical excellence through longitudinal skill acquisition and evidence-based practice...", t: "Given the multifaceted complexity of modern workplace dynamics and rigorous performance standards...", a: "While I was navigating my professional objectives, never had I attained such comprehensive clinical depth...", r: "It would be more plausible to conclude that this fosters sustained career longevity and significant institutional impact...", full: "The professional trajectory of my career emphasizes clinical excellence through longitudinal skill acquisition and evidence-based practice. Given the multifaceted complexity of modern workplace dynamics and rigorous performance standards, adaptability is essential. While I was navigating my professional objectives, never had I attained such comprehensive clinical depth. It would be more plausible to conclude that this fosters sustained career longevity and significant institutional impact." }
-    ];
+const topics = [
+    { t: "1. Hometown", s: "The longitudinal urbanization of my hometown reflects deep demographic shifts and spatial transformation.", ch: "Notwithstanding heritage preservation efforts, the city continues to expand rapidly.", a: "While I was residing there, never had I witnessed such accelerated developmental momentum.", r: "It would be more accurate to conclude that this fosters long-term community resilience." },
+    { t: "2. Work & Career", s: "The professional trajectory of my career emphasizes clinical excellence through longitudinal skill acquisition.", ch: "Given the multifaceted complexity of workplace dynamics, adaptability is paramount.", a: "While I was navigating my professional objectives, never had I attained such clinical depth.", r: "It would be more plausible to conclude that this focus fosters sustained career longevity." },
+    { t: "3. Studies & Education", s: "The academic pursuit of my discipline prioritizes rigorous evidence-based practice and intellectual discovery.", ch: "Considering the complexity of pedagogical frameworks, lifelong learning is essential.", a: "While I was engaging in inquiry, never had I encountered more challenging intellectual paradigms.", r: "It would be more significant to conclude that this approach fosters professional mastery." },
+    { t: "4. Technology", s: "The rapid integration of advanced digital technologies fundamentally revolutionizes contemporary workflow efficiency.", ch: "Insofar as the complexity of global connectivity is concerned, digital literacy is an indispensable requirement.", a: "While I was utilizing these tools, never had I optimized my tasks with such surgical precision.", r: "It would be more analytical to conclude that this transition fosters systemic innovation." },
+    { t: "5. Health & Fitness", s: "The prioritization of personal wellness mandates a lifestyle characterized by preventative care.", ch: "Notwithstanding the complexity of maintaining physical conditioning, consistency remains key.", a: "While I was training consistently, never had I prioritized my holistic well-being with such commitment.", r: "It would be more prudent to conclude that this lifestyle fosters sustained performance." },
+    { t: "6. Travel & Culture", s: "Cultural immersion experiences serve to significantly broaden one's global perspectives and awareness.", ch: "Given the complexity of cross-cultural communication, travel is an effective medium for learning.", a: "While I was navigating diverse environments, never had I encountered such profound cultural diversity.", r: "It would be more insightful to conclude that this fosters global empathy." },
+    { t: "7. Environment", s: "The strategic preservation of natural habitats is crucial for long-term resource optimization.", ch: "Considering the complexity of climate action, collective responsibility is the only path forward.", a: "While I was advocating for sustainable practices, never had I supported such impactful conservation efforts.", r: "It would be more substantiated to conclude that this fosters long-term viability." },
+    { t: "8. Hobbies", s: "The cultivation of creative hobbies involves complex problem-solving and continuous skill enhancement.", ch: "Reflecting on the complexity of skill development, the process is intrinsically rewarding.", a: "While I was dedicating time to this pursuit, never had I refined my capabilities with such intent.", r: "It would be more appropriate to conclude that this practice fosters personal growth." },
+    { t: "9. Future Goals", s: "The strategic formulation of long-term objectives is essential for achieving professional mobility.", ch: "Notwithstanding the complexity of career transitions, I have developed a comprehensive roadmap.", a: "While I was envisioning my future, never had I cultivated a more disciplined vision.", r: "It would be more strategic to conclude that this fosters long-term stability." },
+    { t: "10. Media & News", s: "The critical interpretation of contemporary media highlights the importance of analyzing information flows.", ch: "Given the complexity of source verification, extreme vigilance is required.", a: "While I was analyzing current events, never had I evaluated discourse with such analytical precision.", r: "It would be more objective to conclude that this fosters greater clarity." }
+];
 
-    let current = 0;
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    let activeField = '';
+let current = 0;
+function load() {
+    document.getElementById('topic-title').innerText = topics[current].t;
+    document.getElementById('p-sit').innerText = topics[current].s;
+    document.getElementById('p-task').innerText = topics[current].ch;
+    document.getElementById('p-act').innerText = topics[current].a;
+    document.getElementById('p-res').innerText = topics[current].r;
+    document.getElementById('audit-box').style.display = 'none';
+}
 
-    function startDictation(id) { activeField = id; recognition.start(); }
-    recognition.onresult = (e) => { document.getElementById(activeField).value = e.results[0][0].transcript; };
+function startDictation(id) {
+    const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    rec.lang = 'en-US';
+    rec.onresult = (e) => { document.getElementById(id).value = e.results[0][0].transcript; };
+    rec.start();
+}
 
-    function evaluateDrill() {
-        document.getElementById('review').innerHTML = `<h3>Band 9 Audit Report</h3><p><strong>Full Elaborated Model:</strong><br>${levels[current].full}</p><button onclick="speakModel()">🔊 Hear Perfect Fluency</button>`;
-        document.getElementById('review').style.display = 'block';
-    }
+function evaluateDrill() {
+    const full = `${topics[current].s} ${topics[current].ch} ${topics[current].a} ${topics[current].r}`;
+    const box = document.getElementById('audit-box');
+    box.innerHTML = `<h3>Audit Report</h3><p>${full}</p>
+                     <button onclick="window.speechSynthesis.speak(new SpeechSynthesisUtterance('${full.replace(/'/g, "\\'")}'))">🔊 Listen</button>`;
+    box.style.display = 'block';
+}
 
-    function speakModel() { window.speechSynthesis.speak(new SpeechSynthesisUtterance(levels[current].full)); }
-
-    function nextLevel() {
-        current = (current + 1) % levels.length;
-        document.getElementById('level-title').innerText = "Level " + (current + 1) + ": " + levels[current].t;
-        document.getElementById('p-sit').innerText = levels[current].s;
-        document.getElementById('p-task').innerText = levels[current].t;
-        document.getElementById('p-act').innerText = levels[current].a;
-        document.getElementById('p-res').innerText = levels[current].r;
-        document.querySelectorAll('textarea').forEach(t => t.value = '');
-        document.getElementById('review').style.display = 'none';
-    }
-    nextLevel();
+function nextLevel() { current = (current + 1) % topics.length; load(); }
+load();
 </script>
 </body>
 </html>
